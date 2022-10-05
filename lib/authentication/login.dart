@@ -59,10 +59,11 @@ class _LoginScreenState extends State<LoginScreen> {
           context: context,
           builder: (c) {
             return ErrorDialog(
-              message: "Invalid the account/password. Please try it again",
+              message: "Invalid user or password!!! Please try again",
             );
           });
     }
+
     if (currentUser != null) {
       readDataAndSetDataLocally(currentUser!);
     }
@@ -82,8 +83,14 @@ class _LoginScreenState extends State<LoginScreen> {
             .setString("name", snapshot.data()!["userName"]);
         await sharedPreferences!
             .setString("photoUrl", snapshot.data()!["userAvatarUrl"]);
+
+        List<String> userCartList = snapshot.data()!['userCart'].cast<String>();
+        await sharedPreferences!.setStringList(
+          'userCart',
+          userCartList,
+        );
         Navigator.pop(context);
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (c) => const HomeScreen()));
       } else {
         firebaseAuth.signOut();

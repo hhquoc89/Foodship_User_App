@@ -59,7 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               context: context,
               builder: (c) {
                 return LoadingDialog(
-                  message: "Registering Account",
+                  message: "Registering Account ,",
                 );
               });
 
@@ -123,19 +123,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
       saveDataToFireStore(currentUser!).then((value) {
         Navigator.pop(context);
         //send user to homePage
-        Route newRoute = MaterialPageRoute(builder: (c) => HomeScreen());
+        Route newRoute = MaterialPageRoute(builder: (c) => const HomeScreen());
         Navigator.pushReplacement(context, newRoute);
       });
     }
   }
 
   Future saveDataToFireStore(User currentUser) async {
-    FirebaseFirestore.instance.collection("sellers").doc(currentUser.uid).set({
-      "sellerUID": currentUser.uid,
-      "sellerEmail": currentUser.email,
-      "sellerName": nameController.text.trim(),
-      "sellerAvatarUrl": sellerImageUrl,
+    FirebaseFirestore.instance.collection("users").doc(currentUser.uid).set({
+      "userUID": currentUser.uid,
+      "userEmail": currentUser.email,
+      "userName": nameController.text.trim(),
+      "userAvatarUrl": sellerImageUrl,
       "status": "approve",
+      "userCart": ['itemValue']
     });
     // save data locally
     sharedPreferences = await SharedPreferences.getInstance();
@@ -143,6 +144,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     await sharedPreferences!.setString('email', currentUser.email.toString());
     await sharedPreferences!.setString('name', nameController.text.trim());
     await sharedPreferences!.setString('photoUrl', sellerImageUrl);
+    await sharedPreferences!.setStringList('userCart', ['itemValue']);
   }
 
   @override
