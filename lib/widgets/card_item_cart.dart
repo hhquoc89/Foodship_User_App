@@ -83,10 +83,10 @@ class _CardItemCartState extends State<CardItemCart> {
                       ]),
                       Text('Price: ${widget.model!.price!} đ',
                           style: const TextStyle(
-                            color: Colors.grey,
-                            fontFamily: 'Roboto',
-                            fontSize: 16,
-                          )),
+                              color: Colors.grey,
+                              fontFamily: 'Roboto',
+                              fontSize: 16,
+                              dsa)),
                       SizedBox(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
