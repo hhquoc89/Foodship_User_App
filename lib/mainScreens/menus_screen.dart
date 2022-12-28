@@ -27,18 +27,18 @@ class _MenusScreenState extends State<MenusScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar(),
-        drawer: const MyDrawer(),
-        body: CustomScrollView(slivers: [
+      appBar: MyAppBar(),
+      drawer: const MyDrawer(),
+      body: CustomScrollView(
+        slivers: [
           SliverPersistentHeader(
-            delegate:
-                TextWidgetHeader(title: widget.model!.sellerName! + ' Menus'),
+            delegate: TextWidgetHeader(title: ' Menu'),
             pinned: true,
           ),
           StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('sellers')
-                .doc(widget.model!.sellerUID)
+                .doc('6E1ZnU332vgoqBTTy2KDoBZzWKT2')
                 .collection('menus')
                 .orderBy("publishedDate", descending: true)
                 .snapshots(),
@@ -77,6 +77,8 @@ class _MenusScreenState extends State<MenusScreen> {
                     );
             },
           ),
-        ]));
+        ],
+      ),
+    );
   }
 }

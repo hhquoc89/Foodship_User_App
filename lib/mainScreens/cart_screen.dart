@@ -50,8 +50,8 @@ class _CartScreenState extends State<CartScreen> {
           )),
         ),
         title: const Text(
-          'Cart',
-          style: TextStyle(fontFamily: 'Signatra', fontSize: 30),
+          'Trang thanh toán',
+          style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,
         automaticallyImplyLeading: true,
@@ -59,99 +59,87 @@ class _CartScreenState extends State<CartScreen> {
       body: Container(
         padding: const EdgeInsets.all(8.0),
         child: ListView(children: [
-          Text('List Item',
-              style: TextStyle(fontFamily: 'Signatra', fontSize: 30)),
+          Text('Danh sách các món ăn ', style: TextStyle(fontSize: 18)),
           SizedBox(height: 10),
-          Container(
-            height: 420,
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              border: Border.all(width: 2.0, color: Colors.grey),
-              borderRadius: const BorderRadius.all(Radius.circular(5)),
-            ),
-            child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('items')
-                    .where("itemID", whereIn: separateItemIDs())
-                    .orderBy('publishedDate', descending: true)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  return !snapshot.hasData
-                      ? Center(child: circularProgress())
-                      : snapshot.data!.docs == 0
-                          ? Container()
-                          : ListView.separated(
-                              shrinkWrap: true,
-                              itemBuilder: ((context, index) {
-                                Items model = Items.fromJson(
-                                    snapshot.data!.docs[index].data()!
-                                        as Map<String, dynamic>);
-                                if (index == 0) {
-                                  totalAmount = 0;
-                                  totalAmount = totalAmount +
-                                      (model.price! *
-                                          separateItemQuantityList![index]);
-                                } else {
-                                  totalAmount = totalAmount +
-                                      (model.price! *
-                                          separateItemQuantityList![index]);
-                                }
-                                if (snapshot.data!.docs.length - 1 == index) {
-                                  WidgetsBinding.instance
-                                      .addPostFrameCallback((timeStamp) {
-                                    Provider.of<TotalAmount>(context,
-                                            listen: false)
-                                        .displayTotalAmount(
-                                            totalAmount.toDouble());
-                                  });
-                                }
-                                return CardItemCart(
-                                  model: model,
-                                  context: context,
-                                  quanNumber: separateItemQuantityList![index],
-                                );
-                              }),
-                              itemCount: snapshot.hasData
-                                  ? snapshot.data!.docs.length
-                                  : 0,
-                              separatorBuilder: ((context, index) =>
-                                  const SizedBox(
-                                    height: 10,
-                                  )),
-                            );
-                }),
-          ),
+          // Container(
+          //   height: 420,
+          //   padding: EdgeInsets.all(8),
+          //   decoration: BoxDecoration(
+          //     shape: BoxShape.rectangle,
+          //     border: Border.all(width: 2.0, color: Colors.grey),
+          //     borderRadius: const BorderRadius.all(Radius.circular(5)),
+          //   ),
+          //   child: StreamBuilder<QuerySnapshot>(
+          //       stream: FirebaseFirestore.instance
+          //           .collection('items')
+          //           .where("itemID", whereIn: separateItemIDs())
+          //           .orderBy('publishedDate', descending: true)
+          //           .snapshots(),
+          //       builder: (context, snapshot) {
+          //         return !snapshot.hasData
+          //             ? Center(child: circularProgress())
+          //             : snapshot.data!.docs == 0
+          //                 ? Container()
+          //                 : ListView.separated(
+          //                     shrinkWrap: true,
+          //                     itemBuilder: ((context, index) {
+          //                       Items model = Items.fromJson(
+          //                           snapshot.data!.docs[index].data()!
+          //                               as Map<String, dynamic>);
+          //                       if (index == 0) {
+          //                         totalAmount = 0;
+          //                         totalAmount = totalAmount +
+          //                             (model.price! *
+          //                                 separateItemQuantityList![index]);
+          //                       } else {
+          //                         totalAmount = totalAmount +
+          //                             (model.price! *
+          //                                 separateItemQuantityList![index]);
+          //                       }
+          //                       if (snapshot.data!.docs.length - 1 == index) {
+          //                         WidgetsBinding.instance
+          //                             .addPostFrameCallback((timeStamp) {
+          //                           Provider.of<TotalAmount>(context,
+          //                                   listen: false)
+          //                               .displayTotalAmount(
+          //                                   totalAmount.toDouble());
+          //                         });
+          //                       }
+          //                       return CardItemCart(
+          //                         model: model,
+          //                         context: context,
+          //                         quanNumber: separateItemQuantityList![index],
+          //                       );
+          //                     }),
+          //                     itemCount: snapshot.hasData
+          //                         ? snapshot.data!.docs.length
+          //                         : 0,
+          //                     separatorBuilder: ((context, index) =>
+          //                         const SizedBox(
+          //                           height: 10,
+          //                         )),
+          //                   );
+          //       }),
+          // ),
           const SizedBox(
             height: 10,
           ),
-          Container(
-            width: 50,
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              border: Border.all(width: 2.0, color: Colors.grey),
-              borderRadius: const BorderRadius.all(Radius.circular(5)),
-            ),
-            child: Consumer2<TotalAmount, CartItemCounter>(
-                builder: (context, amountProvider, cartProvider, c) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Total',
-                      style: TextStyle(fontFamily: 'Signatra', fontSize: 30)),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  cartProvider.count == 0
-                      ? Container()
-                      : Text(amountProvider.tAmount.toString(),
-                          style:
-                              TextStyle(fontFamily: 'Signatra', fontSize: 30))
-                ],
-              );
-            }),
-          )
+          Consumer2<TotalAmount, CartItemCounter>(
+              builder: (context, amountProvider, cartProvider, c) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Tổng cộng', style: TextStyle(fontSize: 20)),
+                const SizedBox(
+                  width: 10,
+                ),
+                cartProvider.count == 0
+                    ? Container()
+                    : Text(amountProvider.tAmount.toString(),
+                        style: TextStyle(fontSize: 20))
+              ],
+            );
+          }),
         ]),
       ),
       floatingActionButton: Row(

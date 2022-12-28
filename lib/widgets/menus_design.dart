@@ -31,8 +31,8 @@ class _MenusDesignWidgetState extends State<MenusDesignWidget> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
-          width: MediaQuery.of(context).size.width,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Divider(
                 height: 4,
@@ -42,8 +42,8 @@ class _MenusDesignWidgetState extends State<MenusDesignWidget> {
               SizedBox(height: 10),
               Image.network(
                 widget.model!.thumbnailUrl!,
-                height: 100,
-                width: 100,
+                height: MediaQuery.of(context).size.height * .15,
+                width: MediaQuery.of(context).size.width * .3,
                 fit: BoxFit.cover,
                 loadingBuilder: (BuildContext context, Widget child,
                     ImageChunkEvent? loadingProgress) {
@@ -60,13 +60,6 @@ class _MenusDesignWidgetState extends State<MenusDesignWidget> {
                 style: const TextStyle(
                   color: Colors.cyan,
                   fontSize: 20,
-                ),
-              ),
-              Text(
-                widget.model!.menuInfo!,
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12,
                 ),
               ),
             ],

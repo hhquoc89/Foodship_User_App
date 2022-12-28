@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:foodship_user_app/mainScreens/menus_screen.dart';
 
 import '../authentication/auth_screen.dart';
 import '../global/global.dart';
@@ -19,7 +20,7 @@ class _MySplashScreenState extends State<MySplashScreen> {
       // if seller is logged in already
       if (firebaseAuth.currentUser != null) {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (c) => const HomeScreen()));
+            context, MaterialPageRoute(builder: (c) => MenusScreen()));
       } else
       // if seller is NOT logged in already
       {
@@ -54,7 +55,7 @@ class _MySplashScreenState extends State<MySplashScreen> {
               const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
-                  "Order Food Online",
+                  "Bồi bàn",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,

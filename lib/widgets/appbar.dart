@@ -4,6 +4,7 @@ import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:foodship_user_app/global/global.dart';
 import 'package:foodship_user_app/mainScreens/cart_screen.dart';
 import 'package:foodship_user_app/respository/cart_Item_counter.dart';
+import 'package:foodship_user_app/widgets/error_dialog.dart';
 import 'package:provider/provider.dart';
 
 class MyAppBar extends StatefulWidget with PreferredSizeWidget {
@@ -21,8 +22,11 @@ class MyAppBar extends StatefulWidget with PreferredSizeWidget {
 }
 
 class _MyAppBarState extends State<MyAppBar> {
+  List<String>? cart = sharedPreferences!.getStringList('userCart');
+
   @override
   Widget build(BuildContext context) {
+    print(cart);
     return AppBar(
       flexibleSpace: Container(
         decoration: const BoxDecoration(
@@ -48,14 +52,24 @@ class _MyAppBarState extends State<MyAppBar> {
           child: Stack(
             children: [
               IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              CartScreen(sellerUID: widget.sellerUID),
-                        ));
-                  },
+                  onPressed: cart != []
+                      ? () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CartScreen(sellerUID: widget.sellerUID),
+                              ));
+                        }
+                      : () {
+                          showDialog(
+                              context: context,
+                              builder: (c) {
+                                return ErrorDialog(
+                                  message: "Vui lòng chọn món",
+                                );
+                              });
+                        },
                   icon: const Icon(
                     Icons.shopping_cart,
                     color: Colors.greenAccent,

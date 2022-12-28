@@ -96,7 +96,7 @@ separateItemQuantities() {
 }
 
 clearCart(context) {
-  sharedPreferences!.setStringList('userCart', ['itemValue']);
+  sharedPreferences!.setStringList('userCart', []);
   List<String>? emptyList = sharedPreferences!.getStringList('userCart');
 
   FirebaseFirestore.instance

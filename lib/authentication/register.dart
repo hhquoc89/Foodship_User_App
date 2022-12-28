@@ -152,87 +152,98 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return SingleChildScrollView(
       child: Container(
         child: Column(
-          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(
-              height: 10,
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .4,
             ),
-            InkWell(
-              onTap: () {
-                _getImage();
-              },
-              child: CircleAvatar(
-                radius: MediaQuery.of(context).size.width * 0.20,
-                backgroundColor: Colors.white,
-                backgroundImage: imageXFile == null
-                    ? null
-                    : FileImage(File(imageXFile!.path)),
-                child: imageXFile == null
-                    ? Icon(
-                        Icons.add_photo_alternate,
-                        size: MediaQuery.of(context).size.width * 0.20,
-                        color: Colors.grey,
-                      )
-                    : null,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  CustomTextField(
-                    data: Icons.person,
-                    controller: nameController,
-                    hintText: "Name",
-                    isObsecre: false,
-                  ),
-                  CustomTextField(
-                    data: Icons.email,
-                    controller: emailController,
-                    hintText: "Email",
-                    isObsecre: false,
-                  ),
-                  CustomTextField(
-                    data: Icons.lock,
-                    controller: passwordController,
-                    hintText: "Password",
-                    isObsecre: true,
-                  ),
-                  CustomTextField(
-                    data: Icons.lock,
-                    controller: confirmPasswordController,
-                    hintText: "Confirm Password",
-                    isObsecre: true,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blueAccent,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-              ),
-              onPressed: () {
-                formValidation();
-              },
-              child: const Text(
-                "Register",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(
-              height: 30,
+            Center(
+              child: Text('Vui lòng liên hệ Admin'),
             ),
           ],
         ),
+        // child: Column(
+        //   mainAxisSize: MainAxisSize.max,
+        //   children: [
+        //     const SizedBox(
+        //       height: 10,
+        //     ),
+        //     InkWell(
+        //       onTap: () {
+        //         _getImage();
+        //       },
+        //       child: CircleAvatar(
+        //         radius: MediaQuery.of(context).size.width * 0.20,
+        //         backgroundColor: Colors.white,
+        //         backgroundImage: imageXFile == null
+        //             ? null
+        //             : FileImage(File(imageXFile!.path)),
+        //         child: imageXFile == null
+        //             ? Icon(
+        //                 Icons.add_photo_alternate,
+        //                 size: MediaQuery.of(context).size.width * 0.20,
+        //                 color: Colors.grey,
+        //               )
+        //             : null,
+        //       ),
+        //     ),
+        //     const SizedBox(
+        //       height: 10,
+        //     ),
+        //     Form(
+        //       key: _formKey,
+        //       child: Column(
+        //         children: [
+        //           CustomTextField(
+        //             data: Icons.person,
+        //             controller: nameController,
+        //             hintText: "Name",
+        //             isObsecre: false,
+        //           ),
+        //           CustomTextField(
+        //             data: Icons.email,
+        //             controller: emailController,
+        //             hintText: "Email",
+        //             isObsecre: false,
+        //           ),
+        //           CustomTextField(
+        //             data: Icons.lock,
+        //             controller: passwordController,
+        //             hintText: "Password",
+        //             isObsecre: true,
+        //           ),
+        //           CustomTextField(
+        //             data: Icons.lock,
+        //             controller: confirmPasswordController,
+        //             hintText: "Confirm Password",
+        //             isObsecre: true,
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //     const SizedBox(
+        //       height: 30,
+        //     ),
+        //     ElevatedButton(
+        //       style: ElevatedButton.styleFrom(
+        //         primary: Colors.blueAccent,
+        //         padding:
+        //             const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+        //       ),
+        //       onPressed: () {
+        //         formValidation();
+        //       },
+        //       child: const Text(
+        //         "Register",
+        //         style:
+        //             TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        //       ),
+        //     ),
+        //     const SizedBox(
+        //       height: 30,
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }

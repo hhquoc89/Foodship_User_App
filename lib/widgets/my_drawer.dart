@@ -15,6 +15,8 @@ class MyDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String url = sharedPreferences!.getString('photoUrl')!;
+    String userName = sharedPreferences!.getString('name')!;
     return Drawer(
       child: ListView(
         children: [
@@ -30,9 +32,17 @@ class MyDrawer extends StatelessWidget {
                   child: SizedBox(
                     width: 160,
                     height: 160,
-                    child: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            sharedPreferences!.getString('photoUrl')!)),
+                    child: url != ''
+                        ? CircleAvatar(backgroundImage: NetworkImage(url))
+                        : CircleAvatar(
+                            backgroundColor: Colors.blue,
+                            child: Center(
+                                child: Text(
+                              userName[0],
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 40),
+                            )),
+                          ),
                   ),
                 ),
               ),
@@ -50,10 +60,10 @@ class MyDrawer extends StatelessWidget {
             child: Column(children: [
               ListTile(
                 onTap: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HomeScreen(),
+                        builder: (context) => MenusScreen(),
                       ));
                 },
                 leading: Icon(
@@ -61,7 +71,7 @@ class MyDrawer extends StatelessWidget {
                   color: Colors.black,
                 ),
                 title: Text(
-                  'Get Order Now',
+                  'Đặt món',
                   style: TextStyle(color: Colors.black),
                 ),
               ),
@@ -83,7 +93,7 @@ class MyDrawer extends StatelessWidget {
                   color: Colors.black,
                 ),
                 title: Text(
-                  'Search',
+                  'Tìm kiếm món ăn',
                   style: TextStyle(color: Colors.black),
                 ),
               ),
@@ -105,29 +115,7 @@ class MyDrawer extends StatelessWidget {
                   color: Colors.black,
                 ),
                 title: const Text(
-                  'Pending Order',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-              const Divider(
-                height: 10,
-                color: Colors.grey,
-                thickness: 1,
-              ),
-              ListTile(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DoneOrdersScreen(),
-                      ));
-                },
-                leading: const Icon(
-                  Icons.shopping_basket,
-                  color: Colors.black,
-                ),
-                title: const Text(
-                  'Done Order',
+                  'Đơn hàng',
                   style: TextStyle(color: Colors.black),
                 ),
               ),
@@ -142,31 +130,8 @@ class MyDrawer extends StatelessWidget {
                   color: Colors.black,
                 ),
                 title: Text(
-                  'History',
+                  'Lịch sử đơn hàng',
                   style: TextStyle(color: Colors.black),
-                ),
-              ),
-              const Divider(
-                height: 10,
-                color: Colors.grey,
-                thickness: 1,
-              ),
-              ListTile(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SaveAddressScreen(),
-                      ));
-                },
-                leading: const Icon(
-                  Icons.add_location_alt_rounded,
-                  color: Colors.black,
-                ),
-                title: const Text(
-                  //add address
-                  'Add Table',
-                  style: const TextStyle(color: Colors.black),
                 ),
               ),
               const Divider(

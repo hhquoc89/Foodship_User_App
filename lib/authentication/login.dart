@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:foodship_user_app/mainScreens/menus_screen.dart';
 
 import '../global/global.dart';
 import '../mainScreens/home_screen.dart';
@@ -30,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
           context: context,
           builder: (c) {
             return ErrorDialog(
-              message: "Please write Email or Password !!!",
+              message: "Vui lòng nhập tài khoản hoặc mật khẩu",
             );
           });
     }
@@ -59,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
           context: context,
           builder: (c) {
             return ErrorDialog(
-              message: "Invalid user or password!!! Please try again",
+              message: "Sai tài khoản hoặc mật khẩu ! Vui lòng nhập lại",
             );
           });
     }
@@ -91,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         Navigator.pop(context);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (c) => const HomeScreen()));
+            context, MaterialPageRoute(builder: (c) => MenusScreen()));
       } else {
         firebaseAuth.signOut();
         Navigator.pop(context);
@@ -101,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
             context: context,
             builder: (c) {
               return ErrorDialog(
-                message: "Invalid the account/password. Please try it again",
+                message: "Sai tài khoản hoặc mật khẩu! Vui lòng nhập lại",
               );
             });
       }
@@ -137,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 CustomTextField(
                   data: Icons.lock,
                   controller: passwordController,
-                  hintText: "Password",
+                  hintText: "Mật khẩu",
                   isObsecre: true,
                 ),
               ],
@@ -152,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
               formValidation();
             },
             child: const Text(
-              "Sign Up",
+              "Đăng nhập",
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
