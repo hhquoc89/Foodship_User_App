@@ -2,18 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:foodship_user_app/global/global.dart';
+import 'package:foodship_user_app/mainScreens/item_detail_screen.dart';
+import 'package:foodship_user_app/model/cart.dart';
 import 'package:foodship_user_app/model/items.dart';
 
 class CardItemCart extends StatefulWidget {
-  final Items? model;
+  final dynamic? model;
   BuildContext? context;
-  final int? quanNumber;
 
   CardItemCart({
     Key? key,
     this.model,
     this.context,
-    this.quanNumber,
   }) : super(key: key);
 
   @override
@@ -24,140 +24,74 @@ class _CardItemCartState extends State<CardItemCart> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 50,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
-        border: Border.all(width: 2.0, color: Colors.grey),
-        borderRadius: const BorderRadius.all(Radius.circular(5)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      width: MediaQuery.of(context).size.width,
+      child: ListView(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
         children: [
-          Text(
-            'Seller : ${sharedPreferences!.getString("name")!}',
-            style: const TextStyle(fontFamily: 'Signatra', fontSize: 24),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Container(
-            color: Colors.grey,
-            height: 0.8,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Container(
-            width: 350,
-            child: Row(
-              children: [
-                Image.network(
-                  widget.model!.thumbnailUrl!,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Container(
-                  width: 240,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(children: [
-                        Flexible(
-                          child: RichText(
-                            overflow: TextOverflow.ellipsis,
-                            strutStyle: StrutStyle(fontSize: 12.0),
-                            text: TextSpan(
-                                text: widget.model!.title!,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Roboto',
-                                  fontSize: 24,
-                                )),
-                          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: InkWell(
+              onTap: (() {
+                showBottomSheet(
+                    context: context,
+                    builder: (c) {
+                      return ItemDetailsScreen(
+                        model: widget.model['itemID'],
+                      );
+                    });
+              }),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * .8,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * .1,
+                          child: Text(widget.model['qty'].toString() + 'x',
+                              style: const TextStyle(fontSize: 15)),
                         ),
-                      ]),
-                      Text('Price: ${widget.model!.price!} đ',
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontFamily: 'Roboto',
-                            fontSize: 16,
-                          )),
-                      SizedBox(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            // InkWell(
-                            //   onTap: () {},
-                            //   child: Container(
-                            //     decoration: const BoxDecoration(
-                            //       shape: BoxShape.circle,
-                            //       color: Colors.grey,
-                            //     ),
-                            //     width: 20,
-                            //     height: 20,
-                            //     child: const Center(
-                            //       child: Icon(
-                            //         Icons.remove,
-                            //         size: 15.0,
-                            //         color: Colors.black,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text('X',
-                                style: TextStyle(
-                                    fontFamily: 'Signatra', fontSize: 28)),
-                            Text(widget.quanNumber.toString(),
-                                style: const TextStyle(
-                                    fontFamily: 'Signatra', fontSize: 28)),
-
-                            // InkWell(
-                            //   onTap: () {},
-                            //   child: Container(
-                            //     decoration: const BoxDecoration(
-                            //       shape: BoxShape.circle,
-                            //       color: Colors.grey,
-                            //     ),
-                            //     width: 20,
-                            //     height: 20,
-                            //     child: const Center(
-                            //       child: Icon(
-                            //         Icons.add,
-                            //         size: 15.0,
-                            //         color: Colors.black,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // )
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                              'Sub-total: ${widget.model!.price! * widget.quanNumber!} đ',
+                        Container(
+                          width: MediaQuery.of(context).size.width * .4,
+                          child: Text(widget.model!['title'],
+                              textAlign: TextAlign.start,
                               style: const TextStyle(
-                                color: Colors.grey,
-                                fontFamily: 'Roboto',
+                                color: Colors.black,
                                 fontSize: 16,
                               )),
-                        ],
-                      ),
-                    ],
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * .2,
+                          child: Text(
+                              oCcy.format(widget.model!['price']).toString() +
+                                  'đ',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                              )),
+                        ),
+                      ],
+                    ),
                   ),
-                )
-              ],
+                  InkWell(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.red)),
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                        size: 13,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
-          )
+          ),
         ],
       ),
     );

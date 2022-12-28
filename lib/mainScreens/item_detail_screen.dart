@@ -100,12 +100,12 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                     buttonArrangement: ButtonArrangement.incRightDecLeft,
                     onIncrement: (number) {
                       setState(() {
-                        total = number * price;
+                        total = number;
                       });
                     },
                     onDecrement: (number) {
                       setState(() {
-                        total = number * price;
+                        total = number;
                       });
                     },
                   ),
@@ -150,7 +150,11 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   separateItemIDList.contains(widget.model!.itemID)
                       ? Fluttertoast.showToast(msg: 'Item is already in Cart!')
                       : addItemToCart(
-                          widget.model!.itemID, context, itemCouter);
+                          widget.model!.itemID,
+                          widget.model!.price!,
+                          itemCouter,
+                          widget.model!.title,
+                          context);
                 },
                 child: Container(
                   decoration: const BoxDecoration(
@@ -177,7 +181,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                             text: ' \u2022 ',
                           ),
                           TextSpan(
-                            text: oCcy.format(total).toString(),
+                            text: oCcy.format(total * price).toString(),
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 15),
                           ),

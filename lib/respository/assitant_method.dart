@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:foodship_user_app/global/global.dart';
+import 'package:foodship_user_app/model/cart.dart';
 import 'package:foodship_user_app/respository/cart_Item_counter.dart';
 import 'package:provider/provider.dart';
 
@@ -42,16 +45,32 @@ separateItemIDs() {
   return separateItemIDsList;
 }
 
-addItemToCart(String? itemID, BuildContext context, int itemCouter) {
-  List<String>? listItem = sharedPreferences!.getStringList('userCart');
-  listItem!.add('${itemID!}:$itemCouter');
+addItemToCart(
+    String? itemID, int price, int qty, String? title, BuildContext context) {
+  List<String>? listItemLocal = sharedPreferences!.getStringList('userCart');
+  List<dynamic> listItemFB = [];
+  Map<String, dynamic> itemMap = {
+    "itemID": itemID,
+    "price": price,
+    "qty": qty,
+    "title": title,
+    "status": 'none',
+  };
+  String encodedMap = json.encode(itemMap);
+  listItemLocal!.add(encodedMap);
+  for (int i = 0; i < listItemLocal.length; i++) {
+    final itemFB = json.decode(listItemLocal[i]);
+    listItemFB.add(itemFB);
+  }
 
   FirebaseFirestore.instance
       .collection('users')
       .doc(firebaseAuth.currentUser!.uid)
-      .update({'userCart': listItem}).then((value) {
-    Fluttertoast.showToast(msg: 'Item Added Successfully!!!');
-    sharedPreferences!.setStringList('userCart', listItem);
+      .update({
+    "userCart": listItemFB,
+  }).then((value) {
+    Fluttertoast.showToast(msg: 'Đã thêm ' + title!);
+    sharedPreferences!.setStringList('userCart', listItemLocal);
 
     Provider.of<CartItemCounter>(context, listen: false)
         .displayCartListItemsNumber();
@@ -78,23 +97,6 @@ separateOrderItemQuantities(orderIDs) {
   return separateItemQuantityList;
 }
 
-separateItemQuantities() {
-  List<int> separateItemQuantityList = [];
-  List<String> defaultItemList = [];
-  defaultItemList = sharedPreferences!.getStringList("userCart")!;
-
-  for (int i = 1; i < defaultItemList.length; i++) {
-    String item = defaultItemList[i].toString();
-
-    List<String> listItemCharacters = item.split(":").toList();
-
-    var quanNumber = int.parse(listItemCharacters[1].toString());
-
-    separateItemQuantityList.add(quanNumber);
-  }
-  return separateItemQuantityList;
-}
-
 clearCart(context) {
   sharedPreferences!.setStringList('userCart', []);
   List<String>? emptyList = sharedPreferences!.getStringList('userCart');
@@ -106,6 +108,6 @@ clearCart(context) {
             sharedPreferences!.setStringList('userCart', emptyList!),
             Provider.of<CartItemCounter>(context, listen: false)
                 .displayCartListItemsNumber(),
-            Fluttertoast.showToast(msg: "Cart has been cleared.")
+            Fluttertoast.showToast(msg: "Xóa đơn hàng thành công")
           });
 }

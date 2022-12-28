@@ -26,7 +26,6 @@ class _MyAppBarState extends State<MyAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    print(cart);
     return AppBar(
       flexibleSpace: Container(
         decoration: const BoxDecoration(

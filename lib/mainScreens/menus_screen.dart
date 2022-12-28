@@ -6,6 +6,7 @@ import 'package:foodship_user_app/global/global.dart';
 
 import 'package:foodship_user_app/model/menu.dart';
 import 'package:foodship_user_app/model/seller.dart';
+import 'package:foodship_user_app/respository/assitant_method.dart';
 import 'package:foodship_user_app/widgets/appbar.dart';
 import 'package:foodship_user_app/widgets/menus_design.dart';
 
@@ -25,7 +26,15 @@ class MenusScreen extends StatefulWidget {
 
 class _MenusScreenState extends State<MenusScreen> {
   @override
+  void initState() {
+    // TODO: implement initState
+    clearCart(context);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // print(sharedPreferences!.getStringList('userCart'));
     return Scaffold(
       appBar: MyAppBar(),
       drawer: const MyDrawer(),
