@@ -22,10 +22,15 @@ class MyAppBar extends StatefulWidget with PreferredSizeWidget {
 }
 
 class _MyAppBarState extends State<MyAppBar> {
-  List<String>? cart = sharedPreferences!.getStringList('userCart');
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<String> cart = sharedPreferences!.getStringList('userCart')!;
     return AppBar(
       flexibleSpace: Container(
         decoration: const BoxDecoration(
@@ -51,24 +56,27 @@ class _MyAppBarState extends State<MyAppBar> {
           child: Stack(
             children: [
               IconButton(
-                  onPressed: cart != []
-                      ? () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    CartScreen(sellerUID: widget.sellerUID),
-                              ));
-                        }
-                      : () {
-                          showDialog(
-                              context: context,
-                              builder: (c) {
-                                return ErrorDialog(
-                                  message: "Vui lòng chọn món",
-                                );
-                              });
-                        },
+                  onPressed:
+                      Provider.of<CartItemCounter>(context, listen: false)
+                                  .cartListItemCounter ==
+                              0
+                          ? () {
+                              showDialog(
+                                  context: context,
+                                  builder: (c) {
+                                    return ErrorDialog(
+                                      message: "Vui lòng chọn món",
+                                    );
+                                  });
+                            }
+                          : () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CartScreen(sellerUID: widget.sellerUID),
+                                  ));
+                            },
                   icon: const Icon(
                     Icons.shopping_cart,
                     color: Colors.greenAccent,

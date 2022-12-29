@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:foodship_user_app/global/global.dart';
 import 'package:foodship_user_app/model/items.dart';
 import 'package:foodship_user_app/respository/assitant_method.dart';
-import 'package:foodship_user_app/widgets/appbar.dart';
+import 'package:foodship_user_app/widgets/progress_bar.dart';
+
 import 'package:number_inc_dec/number_inc_dec.dart';
 
 class ItemDetailsScreen extends StatefulWidget {
@@ -61,6 +62,14 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                     url,
                     width: MediaQuery.of(context).size.width,
                     fit: BoxFit.cover,
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        child: circularProgress(),
+                      );
+                    },
                   ),
                 ),
                 Positioned(
@@ -148,7 +157,12 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   int itemCouter = int.parse(counterTextEditingController.text);
                   List<String> separateItemIDList = separateItemIDs();
                   separateItemIDList.contains(widget.model!.itemID)
-                      ? Fluttertoast.showToast(msg: 'Item is already in Cart!')
+                      ? updateItemInCart(
+                          widget.model!.itemID,
+                          widget.model!.price!,
+                          itemCouter,
+                          widget.model!.title,
+                          context)
                       : addItemToCart(
                           widget.model!.itemID,
                           widget.model!.price!,

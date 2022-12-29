@@ -145,12 +145,12 @@ class MyDrawer extends StatelessWidget {
                     color: Colors.black,
                   ),
                   title: const Text(
-                    'Sign Out',
+                    'Đăng xuất',
                     style: TextStyle(color: Colors.black),
                   ),
                   onTap: () {
                     firebaseAuth.signOut().then((value) {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: ((c) => const AuthScreen())));

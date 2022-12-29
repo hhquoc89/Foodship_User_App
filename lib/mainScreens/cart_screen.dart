@@ -35,7 +35,7 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(sharedPreferences!.getStringList('userCart'));
+    // print(sharedPreferences!.getStringList('userCart'));
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
@@ -57,130 +57,153 @@ class _CartScreenState extends State<CartScreen> {
         ),
         centerTitle: true,
         automaticallyImplyLeading: true,
+        actions: [
+          InkWell(
+            onTap: () => setState(() {}),
+            child: Icon(Icons.replay_outlined),
+          ),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(8.0),
-        child: ListView(children: [
-          Text('Danh sách các món ăn ', style: TextStyle(fontSize: 18)),
-          SizedBox(height: 10),
-          FutureBuilder<DocumentSnapshot>(
-              future: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(sharedPreferences!.getString('uid'))
-                  .get(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text("Something went wrong");
-                }
-                if (snapshot.hasData && !snapshot.data!.exists) {
-                  return Text("Document does not exist");
-                }
-                if (snapshot.connectionState == ConnectionState.done) {
-                  Map<String, dynamic> data =
-                      snapshot.data!.data() as Map<String, dynamic>;
-
-                  List<dynamic> carts = data['userCart'];
-
-                  return ListView.separated(
-                    shrinkWrap: true,
-                    itemBuilder: ((context, index) {
-                      final cart = carts[index];
-                      num price = cart['price'];
-                      final qty = cart['qty'];
-
-                      if (index == 0) {
-                        totalAmount = 0;
-                        totalAmount = totalAmount + (price * qty);
-                      } else {
-                        totalAmount = totalAmount + (price * qty);
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Flexible(
+            flex: 9,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Danh sách các món ăn ',
+                      style: TextStyle(fontSize: 18)),
+                ),
+                SizedBox(height: 10),
+                FutureBuilder<DocumentSnapshot>(
+                    future: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(sharedPreferences!.getString('uid'))
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text("Something went wrong");
                       }
-
-                      if (carts.length - 1 == index) {
-                        WidgetsBinding.instance
-                            .addPostFrameCallback((timeStamp) {
-                          Provider.of<TotalAmount>(context, listen: false)
-                              .displayTotalAmount(totalAmount.toDouble());
-                        });
+                      if (snapshot.hasData && !snapshot.data!.exists) {
+                        return Text("Document does not exist");
                       }
-                      return CardItemCart(
-                        model: cart,
-                        context: context,
-                      );
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        Map<String, dynamic> data =
+                            snapshot.data!.data() as Map<String, dynamic>;
+
+                        List<dynamic> carts = data['userCart'];
+
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          itemBuilder: ((context, index) {
+                            final cart = carts[index];
+                            final price = cart['price'];
+                            final qty = cart['qty'];
+
+                            if (index == 0) {
+                              totalAmount = 0;
+                              totalAmount = totalAmount + (price * qty);
+                            } else {
+                              totalAmount = totalAmount + (price * qty);
+                            }
+
+                            if (carts.length - 1 == index) {
+                              WidgetsBinding.instance
+                                  .addPostFrameCallback((timeStamp) {
+                                Provider.of<TotalAmount>(context, listen: false)
+                                    .displayTotalAmount(totalAmount.toDouble());
+                              });
+                            }
+                            return CardItemCart(
+                              model: cart,
+                              context: context,
+                              refresh: () {
+                                setState(() {});
+                              },
+                            );
+                          }),
+                          itemCount: snapshot.hasData ? carts.length : 0,
+                          separatorBuilder: ((context, index) => const SizedBox(
+                                height: 10,
+                              )),
+                        );
+                      }
+                      return circularProgress();
                     }),
-                    itemCount: snapshot.hasData ? carts.length : 0,
-                    separatorBuilder: ((context, index) => const SizedBox(
-                          height: 10,
-                        )),
-                  );
-                }
-                return circularProgress();
-              }),
-          const Divider(
-            indent: 10,
-            endIndent: 10,
-            color: Colors.black,
+                const Divider(
+                  indent: 10,
+                  endIndent: 10,
+                  color: Colors.black,
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Consumer2<TotalAmount, CartItemCounter>(
+                      builder: (context, amountProvider, cartProvider, c) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Tổng cộng', style: TextStyle(fontSize: 20)),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        cartProvider.count == 0
+                            ? Container()
+                            : Text('${oCcy.format(amountProvider.tAmount)}đ',
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold))
+                      ],
+                    );
+                  }),
+                ),
+              ],
+            ),
           ),
-          Padding(
-            padding: EdgeInsets.all(8),
-            child: Consumer2<TotalAmount, CartItemCounter>(
-                builder: (context, amountProvider, cartProvider, c) {
-              return Row(
+          Flexible(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Tổng cộng', style: TextStyle(fontSize: 20)),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  cartProvider.count == 0
-                      ? Container()
-                      : Text(
-                          oCcy.format(amountProvider.tAmount).toString() + 'đ',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold))
-                ],
-              );
-            }),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const SizedBox(
-                width: 10,
-              ),
-              FloatingActionButton.extended(
-                heroTag: 'btn1',
-                onPressed: () {
-                  clearCart(context);
-                  setState(() {});
-                },
-                label:
-                    (const Text('Clear cart', style: TextStyle(fontSize: 16))),
-                backgroundColor: Colors.cyan,
-                icon: const Icon((Icons.clear_all)),
-              ),
-              Consumer2<TotalAmount, CartItemCounter>(
-                builder: (context, amountProvider, cartProvider, c) {
-                  return FloatingActionButton.extended(
-                    heroTag: 'btn2',
+                  FloatingActionButton.extended(
+                    heroTag: 'btn1',
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (c) => AddressScreen(
-                            totalAmount: totalAmount.toDouble(),
-                            sellerUID: widget.sellerUID,
-                          ),
-                        ),
-                      );
+                      clearCart(context);
+                      setState(() {});
                     },
-                    label: (const Text('Check out',
+                    label: (const Text('Xóa đơn hàng ',
                         style: TextStyle(fontSize: 16))),
                     backgroundColor: Colors.cyan,
-                    icon: const Icon((Icons.navigate_next)),
-                  );
-                },
-              )
-            ],
+                    icon: const Icon((Icons.clear_all)),
+                  ),
+                  Consumer2<TotalAmount, CartItemCounter>(
+                    builder: (context, amountProvider, cartProvider, c) {
+                      return FloatingActionButton.extended(
+                        heroTag: 'btn2',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (c) => AddressScreen(
+                                totalAmount: totalAmount.toDouble(),
+                                sellerUID: widget.sellerUID,
+                              ),
+                            ),
+                          );
+                        },
+                        label: (const Text('Chọn bàn',
+                            style: TextStyle(fontSize: 16))),
+                        backgroundColor: Colors.cyan,
+                        icon: const Icon((Icons.navigate_next)),
+                      );
+                    },
+                  )
+                ],
+              ),
+            ),
           ),
         ]),
       ),

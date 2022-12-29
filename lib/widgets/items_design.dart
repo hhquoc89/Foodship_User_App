@@ -58,6 +58,7 @@ class _ItemsDesignWidgetState extends State<ItemsDesignWidget> {
             ),
             Text(
               widget.model!.title!,
+              textAlign: TextAlign.center,
               style: const TextStyle(
                 color: Colors.cyan,
                 fontSize: 20,

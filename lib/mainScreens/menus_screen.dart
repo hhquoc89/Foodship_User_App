@@ -6,7 +6,9 @@ import 'package:foodship_user_app/global/global.dart';
 
 import 'package:foodship_user_app/model/menu.dart';
 import 'package:foodship_user_app/model/seller.dart';
+import 'package:foodship_user_app/respository/address_changer.dart';
 import 'package:foodship_user_app/respository/assitant_method.dart';
+import 'package:foodship_user_app/respository/push_notification.dart';
 import 'package:foodship_user_app/widgets/appbar.dart';
 import 'package:foodship_user_app/widgets/menus_design.dart';
 
@@ -25,10 +27,17 @@ class MenusScreen extends StatefulWidget {
 }
 
 class _MenusScreenState extends State<MenusScreen> {
+  final PushNotificationService _pushNotificationService =
+      PushNotificationService();
+
   @override
   void initState() {
     // TODO: implement initState
     clearCart(context);
+    _pushNotificationService.requestPermission();
+    _pushNotificationService.getToken();
+    _pushNotificationService.initInfo();
+    initAllAddressTableForUser(sharedPreferences!.getString('uid')!);
     super.initState();
   }
 
