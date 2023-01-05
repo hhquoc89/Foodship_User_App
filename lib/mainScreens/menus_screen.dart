@@ -37,13 +37,12 @@ class _MenusScreenState extends State<MenusScreen> {
     _pushNotificationService.requestPermission();
     _pushNotificationService.getToken();
     _pushNotificationService.initInfo();
-    initAllAddressTableForUser(sharedPreferences!.getString('uid')!);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // print(sharedPreferences!.getStringList('userCart'));
     return Scaffold(
       appBar: MyAppBar(),
       drawer: const MyDrawer(),

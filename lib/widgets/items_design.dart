@@ -26,6 +26,9 @@ class _ItemsDesignWidgetState extends State<ItemsDesignWidget> {
             builder: (c) {
               return ItemDetailsScreen(
                 model: widget.model,
+                refresh: () {
+                  setState(() {});
+                },
               );
             });
       },

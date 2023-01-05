@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:foodship_user_app/mainScreens/menus_screen.dart';
+import 'package:foodship_user_app/respository/address_changer.dart';
 
 import '../authentication/auth_screen.dart';
 import '../global/global.dart';
@@ -19,6 +20,7 @@ class _MySplashScreenState extends State<MySplashScreen> {
     Timer(const Duration(seconds: 2), () async {
       // if seller is logged in already
       if (firebaseAuth.currentUser != null) {
+        // initAllAddressTableForUser(sharedPreferences!.getString('uid')!);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (c) => MenusScreen()));
       } else

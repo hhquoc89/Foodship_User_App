@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foodship_user_app/global/global.dart';
 
 import 'package:foodship_user_app/mainScreens/address_screen.dart';
+import 'package:foodship_user_app/mainScreens/menus_screen.dart';
 import 'package:foodship_user_app/model/cart.dart';
 import 'package:foodship_user_app/model/items.dart';
 import 'package:foodship_user_app/respository/assitant_method.dart';
@@ -170,9 +171,13 @@ class _CartScreenState extends State<CartScreen> {
                 children: [
                   FloatingActionButton.extended(
                     heroTag: 'btn1',
-                    onPressed: () {
-                      clearCart(context);
-                      setState(() {});
+                    onPressed: () async {
+                      await clearCart(context);
+
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MenusScreen()));
                     },
                     label: (const Text('Xóa đơn hàng ',
                         style: TextStyle(fontSize: 16))),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
@@ -22,15 +24,29 @@ class MyAppBar extends StatefulWidget with PreferredSizeWidget {
 }
 
 class _MyAppBarState extends State<MyAppBar> {
+  late Timer timer;
+  int counter = sharedPreferences!.getStringList('userCart')!.length;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) => getCouter());
+  }
+
+  void getCouter() {
+    setState(() {
+      counter;
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<String> cart = sharedPreferences!.getStringList('userCart')!;
     return AppBar(
       flexibleSpace: Container(
         decoration: const BoxDecoration(
@@ -55,32 +71,31 @@ class _MyAppBarState extends State<MyAppBar> {
         Center(
           child: Stack(
             children: [
-              IconButton(
-                  onPressed:
-                      Provider.of<CartItemCounter>(context, listen: false)
-                                  .cartListItemCounter ==
-                              0
-                          ? () {
-                              showDialog(
-                                  context: context,
-                                  builder: (c) {
-                                    return ErrorDialog(
-                                      message: "Vui lòng chọn món",
-                                    );
-                                  });
-                            }
-                          : () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        CartScreen(sellerUID: widget.sellerUID),
-                                  ));
-                            },
-                  icon: const Icon(
-                    Icons.shopping_cart,
-                    color: Colors.greenAccent,
-                  )),
+              Consumer<CartItemCounter>(builder: (context, counter, c) {
+                return IconButton(
+                    onPressed: counter.count == 0
+                        ? () {
+                            showDialog(
+                                context: context,
+                                builder: (c) {
+                                  return ErrorDialog(
+                                    message: "Vui lòng chọn món",
+                                  );
+                                });
+                          }
+                        : () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CartScreen(sellerUID: widget.sellerUID),
+                                ));
+                          },
+                    icon: const Icon(
+                      Icons.shopping_cart,
+                      color: Colors.greenAccent,
+                    ));
+              }),
               Positioned(
                   right: 4,
                   child: Stack(

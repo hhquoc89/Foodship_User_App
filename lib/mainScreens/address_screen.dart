@@ -24,7 +24,7 @@ class _AddressScreenState extends State<AddressScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: SimpleAppBar(
-        title: "iFood",
+        title: "Chọn bàn ăn",
       ),
       // floatingActionButton: FloatingActionButton.extended(
       //   label: const Text("Add New Address"),
@@ -48,7 +48,7 @@ class _AddressScreenState extends State<AddressScreen> {
             child: Padding(
               padding: EdgeInsets.all(8),
               child: Text(
-                "Select Table:",
+                "Danh sách bàn ăn:",
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -72,7 +72,7 @@ class _AddressScreenState extends State<AddressScreen> {
                         )
                       : snapshot.data!.docs.length == 0
                           ? Container()
-                          : ListView.builder(
+                          : GridView.builder(
                               itemCount: snapshot.data!.docs.length,
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
@@ -87,6 +87,12 @@ class _AddressScreenState extends State<AddressScreen> {
                                           as Map<String, dynamic>),
                                 );
                               },
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 5.0,
+                                mainAxisSpacing: 5.0,
+                              ),
                             );
                 },
               ),

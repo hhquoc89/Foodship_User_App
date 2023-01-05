@@ -8,8 +8,9 @@ import 'package:foodship_user_app/widgets/progress_bar.dart';
 import 'package:number_inc_dec/number_inc_dec.dart';
 
 class ItemDetailsScreen extends StatefulWidget {
+  final Function? refresh;
   final Items? model;
-  ItemDetailsScreen({this.model});
+  ItemDetailsScreen({this.model, this.refresh});
 
   @override
   _ItemDetailsScreenState createState() => _ItemDetailsScreenState();
@@ -162,7 +163,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                           widget.model!.price!,
                           itemCouter,
                           widget.model!.title,
-                          context)
+                          context,
+                          widget.refresh!)
                       : addItemToCart(
                           widget.model!.itemID,
                           widget.model!.price!,

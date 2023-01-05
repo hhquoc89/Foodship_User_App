@@ -43,42 +43,36 @@ class _CardItemCartState extends State<CardItemCart> {
             padding: const EdgeInsets.all(10.0),
             child: InkWell(
               onTap: (() {
-                // showBottomSheet(
-                //     context: context,
-                //     builder: (c) {
-                //       return Text('sadsadsa');
-                //     });
-                // print(widget.model['itemID']);
-                // StreamBuilder<DocumentSnapshot>(
-                //   stream: FirebaseFirestore.instance
-                //       .collection('items')
-                //       .doc(widget.model['itemID'])
-                //       .snapshots(),
-                //   builder: (BuildContext context,
-                //       AsyncSnapshot<DocumentSnapshot> snapshot) {
-                //     if (snapshot.hasError) {
-                //       return Text("Something went wrong");
-                //     }
+                showBottomSheet(
+                    context: context,
+                    builder: (c) {
+                      return FutureBuilder<DocumentSnapshot>(
+                        future: FirebaseFirestore.instance
+                            .collection('items')
+                            .doc(widget.model['itemID'])
+                            .get(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text("Something went wrong");
+                          }
 
-                //     if (snapshot.hasData && !snapshot.data!.exists) {
-                //       return Text("Document does not exist");
-                //     }
+                          if (snapshot.hasData && !snapshot.data!.exists) {
+                            return Text("Document does not exist");
+                          }
 
-                //     if (snapshot.connectionState == ConnectionState.done) {
-                //       Items model = Items.fromJson(
-                //           snapshot.data!.data()! as Map<String, dynamic>);
-                //       showBottomSheet(
-                //           context: context,
-                //           builder: (c) {
-                //             return ItemDetailsScreen(
-                //               model: model,
-                //             );
-                //           });
-                //     }
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            Items model = Items.fromJson(
+                                snapshot.data!.data()! as Map<String, dynamic>);
+                            return ItemDetailsScreen(
+                                model: model, refresh: widget.refresh!);
+                          }
 
-                //     return Text("loading");
-                //   },
-                // );
+                          return Text("loading");
+                        },
+                      );
+                    });
               }),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -122,7 +116,7 @@ class _CardItemCartState extends State<CardItemCart> {
                         List<String>? cart =
                             sharedPreferences!.getStringList('userCart');
                         cart!.length == 1
-                            ? clearCart(context)
+                            ? clearCartLastItem(context)
                             : deleteItemInCart(itemID, price, qty, title,
                                 context, widget.refresh!);
                       },

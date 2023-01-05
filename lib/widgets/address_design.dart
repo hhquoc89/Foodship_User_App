@@ -38,135 +38,47 @@ class _AddressDesignState extends State<AddressDesign> {
       child: Card(
         color: Colors.cyan.withOpacity(0.4),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             //address info
-            Row(
-              children: [
-                Radio(
-                  groupValue: widget.currentIndex!,
-                  value: widget.value!,
-                  activeColor: Colors.amber,
-                  onChanged: (val) {
-                    //provider
-                    Provider.of<AddressChanger>(context, listen: false)
-                        .displayResult(val);
-                    print(val);
-                  },
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: Table(
-                        children: [
-                          TableRow(
-                            children: [
-                              const Text(
-                                "Table Name: ",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(widget.model!.name.toString()),
-                            ],
-                          ),
-                          // TableRow(
-                          //   children: [
-                          //     const Text(
-                          //       "Phone Number: ",
-                          //       style: TextStyle(
-                          //           color: Colors.black,
-                          //           fontWeight: FontWeight.bold),
-                          //     ),
-                          //     Text(widget.model!.phoneNumber.toString()),
-                          //   ],
-                          // ),
-                          // TableRow(
-                          //   children: [
-                          //     const Text(
-                          //       "Flat Number: ",
-                          //       style: TextStyle(
-                          //           color: Colors.black,
-                          //           fontWeight: FontWeight.bold),
-                          //     ),
-                          //     Text(widget.model!.flatNumber.toString()),
-                          //   ],
-                          // ),
-                          // TableRow(
-                          //   children: [
-                          //     const Text(
-                          //       "City: ",
-                          //       style: TextStyle(
-                          //           color: Colors.black,
-                          //           fontWeight: FontWeight.bold),
-                          //     ),
-                          //     Text(widget.model!.city.toString()),
-                          //   ],
-                          // ),
-                          // TableRow(
-                          //   children: [
-                          //     const Text(
-                          //       "State: ",
-                          //       style: TextStyle(
-                          //           color: Colors.black,
-                          //           fontWeight: FontWeight.bold),
-                          //     ),
-                          //     Text(widget.model!.state.toString()),
-                          //   ],
-                          // ),
-                          // TableRow(
-                          //   children: [
-                          //     const Text(
-                          //       "Full Address: ",
-                          //       style: TextStyle(
-                          //           color: Colors.black,
-                          //           fontWeight: FontWeight.bold),
-                          //     ),
-                          //     Text(widget.model!.fullAddress.toString()),
-                          //   ],
-                          // ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+
+            Radio(
+              groupValue: widget.currentIndex!,
+              value: widget.value!,
+              activeColor: Colors.amber,
+              onChanged: (val) {
+                //provider
+                Provider.of<AddressChanger>(context, listen: false)
+                    .displayResult(val);
+              },
             ),
-
-            //button
-            // ElevatedButton(
-            //   child: const Text("Check on Maps"),
-            //   style: ElevatedButton.styleFrom(
-            //     primary: Colors.black54,
-            //   ),
-            //   onPressed: ()
-            //   {
-            //     MapsUtils.openMapWithPosition(widget.model!.lat!, widget.model!.lng!);
-
-            //     //MapsUtils.openMapWithAddress(widget.model!.fullAddress!);
-            //   },
-            // ),
-
-            //button
+            const Icon(
+              Icons.table_bar,
+              size: 25,
+            ),
+            Text(
+              widget.model!.name!,
+              style: const TextStyle(fontSize: 20),
+            ),
             widget.value == Provider.of<AddressChanger>(context).count
                 ? ElevatedButton(
-                    child: const Text("Submit"),
                     style: ElevatedButton.styleFrom(
                       primary: Colors.green,
                     ),
                     onPressed: () {
+                      final String? tableName = widget.model!.name;
+                      print(tableName);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (c) => PlacedOrderScreen(
+                                    addressName: tableName,
                                     addressID: widget.addressID,
                                     totalAmount: widget.totalAmount,
                                     sellerUID: widget.sellerUID,
                                   )));
                     },
+                    child: const Text("Chọn bàn này"),
                   )
                 : Container(),
           ],

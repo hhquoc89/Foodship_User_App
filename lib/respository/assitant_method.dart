@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -78,12 +79,13 @@ addItemToCart(
 
     Provider.of<CartItemCounter>(context, listen: false)
         .displayCartListItemsNumber();
+
     Navigator.pop(context);
   });
 }
 
-updateItemInCart(
-    String? itemID, int price, int qty, String? title, BuildContext context) {
+updateItemInCart(String? itemID, int price, int qty, String? title,
+    BuildContext context, Function refresh) {
   List<String>? listItemLocal = sharedPreferences!.getStringList('userCart');
   List<String>? newListItemLocal = [];
   List<dynamic> listItemFB = [];
@@ -135,6 +137,8 @@ updateItemInCart(
         .displayCartListItemsNumber();
     Navigator.pop(context);
     Navigator.pop(context);
+
+    refresh();
   });
 }
 
@@ -216,56 +220,24 @@ separateOrderItemQuantities(orderIDs) {
 }
 
 clearCart(context) {
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            "Xóa đơn",
-            style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: const Text(
-            "Bạn muốn xóa đơn hàng này ?",
-            style: TextStyle(
-              fontSize: 16,
-            ),
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("Không"),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                sharedPreferences!.setStringList('userCart', []);
-                List<String>? emptyList =
-                    sharedPreferences!.getStringList('userCart');
+  sharedPreferences!.setStringList('userCart', []);
+  List<String>? emptyList = sharedPreferences!.getStringList('userCart');
 
-                FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(firebaseAuth.currentUser!.uid)
-                    .update({'userCart': emptyList}).then((value) => {
-                          sharedPreferences!
-                              .setStringList('userCart', emptyList!),
-                          Provider.of<CartItemCounter>(context, listen: false)
-                              .displayCartListItemsNumber(),
-                          Fluttertoast.showToast(
-                              msg: "Xóa đơn hàng thành công"),
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MenusScreen(),
-                              ))
-                        });
-              },
-              child: const Text("Có"),
-            ),
-          ],
-        );
-      });
+  FirebaseFirestore.instance
+      .collection('users')
+      .doc(firebaseAuth.currentUser!.uid)
+      .update({'userCart': emptyList}).then((value) => {
+            sharedPreferences!.setStringList('userCart', emptyList!),
+            Provider.of<CartItemCounter>(context, listen: false)
+                .displayCartListItemsNumber(),
+            Fluttertoast.showToast(msg: "Xóa đơn hàng thành công"),
+          });
+}
+
+clearCartLastItem(context) {
+  clearCart(context);
+  Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => MenusScreen()),
+      ModalRoute.withName('/menu'));
 }

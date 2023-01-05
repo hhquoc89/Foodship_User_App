@@ -15,13 +15,21 @@ class AddressChanger extends ChangeNotifier {
 
 initAllAddressTableForUser(String userID) async {
   String nameTable = '';
-
+  final model = Address(
+    name: nameTable,
+    state: '',
+    fullAddress: '',
+    phoneNumber: '',
+    flatNumber: '',
+    city: '',
+    lat: 0.0,
+    lng: 0.0,
+  ).toJson();
   CollectionReference collectionRef =
       FirebaseFirestore.instance.collection('tables');
-  // Get docs from collection reference
+
   QuerySnapshot querySnapshot = await collectionRef.get();
 
-  // Get data from docs and convert map to List
   final List<dynamic> allData =
       querySnapshot.docs.map((doc) => doc.data()).toList();
 
@@ -41,11 +49,12 @@ initAllAddressTableForUser(String userID) async {
       lat: 0.0,
       lng: 0.0,
     ).toJson();
+
     FirebaseFirestore.instance
         .collection("users")
         .doc(userID)
         .collection("userAddress")
         .doc(DateTime.now().millisecondsSinceEpoch.toString())
-        .set(model);
+        .update(model);
   }
 }
