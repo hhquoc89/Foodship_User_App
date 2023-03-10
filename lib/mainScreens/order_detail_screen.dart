@@ -25,7 +25,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SimpleAppBar(title: 'Order Detail'),
+      appBar: SimpleAppBar(title: 'Chi tiết đơn hàng'),
       body: SingleChildScrollView(
           child: FutureBuilder<DocumentSnapshot>(
               future: FirebaseFirestore.instance
@@ -53,7 +53,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           ),
                           Center(
                             child: Text(
-                                DateFormat("dd MMMM, yyyy - hh:mm aa").format(
+                                DateFormat("dd/MM/yyyy - hh:mm aa").format(
                                     DateTime.fromMillisecondsSinceEpoch(
                                         int.parse(dataMap["orderTime"]))),
                                 style: const TextStyle(
@@ -72,10 +72,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
-                                  'Total :',
+                                  'Tổng cộng :',
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                Text(dataMap['totalAmount'].toString() + ' VND',
+                                Text(
+                                    oCcy.format(double.parse(
+                                            dataMap['totalAmount']
+                                                .toString())) +
+                                        ' đ',
                                     style: const TextStyle(fontSize: 18)),
                               ],
                             ),
@@ -90,7 +94,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
-                                  'Order ID :',
+                                  'Mã đơn hàng :',
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold),

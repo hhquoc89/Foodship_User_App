@@ -124,7 +124,14 @@ class MyDrawer extends StatelessWidget {
                 color: Colors.grey,
                 thickness: 1,
               ),
-              const ListTile(
+              ListTile(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DoneOrdersScreen(),
+                      ));
+                },
                 leading: Icon(
                   Icons.access_time,
                   color: Colors.black,

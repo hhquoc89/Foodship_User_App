@@ -1,159 +1,104 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:foodship_user_app/mainScreens/order_detail_screen.dart';
-import 'package:foodship_user_app/model/items.dart';
+import 'package:foodship_user_app/model/order.dart';
+import 'package:foodship_user_app/widgets/placed_order.dart';
 
-class OrderCard extends StatefulWidget {
-  final int? itemCount;
-  final List<DocumentSnapshot>? data;
-  final String? orderID;
-  final List<String>? seperateQuantitiesList;
+class OrderCardNew extends StatefulWidget {
+  final Orders? orders;
 
-  OrderCard({
-    this.itemCount,
-    this.data,
-    this.orderID,
-    this.seperateQuantitiesList,
-  });
+  const OrderCardNew({
+    Key? key,
+    this.orders,
+  }) : super(key: key);
 
   @override
-  State<OrderCard> createState() => _OrderCardState();
+  State<OrderCardNew> createState() => _OrderCardNewState();
 }
 
-class _OrderCardState extends State<OrderCard> {
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    setState(() {
-      widget;
-    });
-  }
+class _OrderCardNewState extends State<OrderCardNew> {
+  late Timer timer;
+
+  String orderStatus = "";
+
+  String sellerId = '';
+  String orderTotalAmount = '';
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => OrderDetailScreen(
-                orderID: widget.orderID,
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OrderDetailScreen(
+                      orderID: widget.orders!.orderId,
+                    ),
+                  ));
+            },
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.black12,
+                    Colors.white54,
+                  ],
+                  begin: FractionalOffset(0.0, 0.0),
+                  end: FractionalOffset(1.0, 0.0),
+                  stops: [0.0, 1.0],
+                  tileMode: TileMode.clamp,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(5.0) //
+                    ),
               ),
-            ));
-      },
-      child: Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-          colors: [
-            Colors.black12,
-            Colors.white54,
-          ],
-          begin: FractionalOffset(0.0, 0.0),
-          end: FractionalOffset(1.0, 0.0),
-          stops: [0.0, 1.0],
-          tileMode: TileMode.clamp,
-        )),
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.all(10),
-        height: widget.itemCount! * 125,
-        child: ListView.builder(
-          itemCount: widget.itemCount,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            final seperateQuantitiesList =
-                widget.seperateQuantitiesList ?? [''];
-            Items model = Items.fromJson(
-                widget.data![index].data()! as Map<String, dynamic>);
-            return placedOrderDesignWidget(
-                model, context, seperateQuantitiesList[index]);
-          },
-        ),
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.all(10),
+              height: widget.orders!.ordersList!.length * 130,
+              width: MediaQuery.of(context).size.width * .8,
+              child: ListView.separated(
+                itemCount: widget.orders!.ordersList!.length,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  final listOrdersList = widget.orders!.ordersList ?? [];
+
+                  final OrdersList ordersList = listOrdersList[index];
+
+                  return PlacedOrderCardEnd(
+                    orders: widget.orders,
+                    ordersList: ordersList,
+                    func: () {},
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(
+                      height: MediaQuery.of(context).size.height * .01);
+                },
+              ),
+            ),
+          ),
+          // SizedBox(
+          //   width: MediaQuery.of(context).size.width * .1,
+          //   height: MediaQuery.of(context).size.height * .11,
+          //   child: FittedBox(
+          //       child: FloatingActionButton.extended(
+          //     backgroundColor: Colors.amber,
+          //     label: Text('Xong đơn'),
+          //     icon: const Icon(Icons.done),
+          //     heroTag: null,
+          //     onPressed: () {
+          //       confirmParcelHasBeenMaking(
+          //           widget.orderID, sellerId, orderByUser, '', 0.0, 0.0);
+          //     },
+          //   )),
+          // )
+        ],
       ),
     );
   }
-}
-
-Widget placedOrderDesignWidget(
-    Items model, BuildContext context, seperateQuantitiesList) {
-  return Container(
-    width: MediaQuery.of(context).size.width,
-    height: 120,
-    color: Colors.grey[200],
-    child: Row(
-      children: [
-        Image.network(
-          model.thumbnailUrl!,
-          width: 120,
-          height: 120,
-          fit: BoxFit.cover,
-        ),
-        const SizedBox(
-          width: 10.0,
-        ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Expanded(
-                    child: Text(
-                      model.title!,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontFamily: "Acme",
-                      ),
-                    ),
-                  ),
-                  Text(
-                    model.price.toString(),
-                    style: const TextStyle(
-                      color: Colors.blue,
-                      fontSize: 18.0,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    "VND ",
-                    style: TextStyle(fontSize: 16.0, color: Colors.blue),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  const Text(
-                    "x ",
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      seperateQuantitiesList,
-                      style: const TextStyle(
-                        color: Colors.black54,
-                        fontSize: 30,
-                        fontFamily: "Acme",
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
 }

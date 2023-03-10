@@ -18,7 +18,7 @@ class ShipmentAddressDesign extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Table Details:',
+              Text('Tên bàn:',
                   style: TextStyle(
                       color: Colors.black, fontWeight: FontWeight.bold)),
               Text(model!.name!,
